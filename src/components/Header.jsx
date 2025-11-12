@@ -1,126 +1,78 @@
-// src/components/Header.jsx
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import React, { useState, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { selectCartCount, selectCartSubtotal } from "../app/store";
+import { setSearchQuery } from "../app/store";
 
-function Header() {
-  const cartCount = useSelector((state) => state.cart.items.length);
+export default function Header() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const cartCount = useSelector(selectCartCount);
+  const subtotal = useSelector(selectCartSubtotal);
+  const [local, setLocal] = useState("");
+
+  const onSearchChange = useCallback(
+    (e) => {
+      const v = e.target.value;
+      setLocal(v);
+      dispatch(setSearchQuery(v));
+    },
+    [dispatch]
+  );
 
   return (
-    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#FFEB3B] via-[#FF9800] to-[#FF5722] shadow-md">
-      <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
-        {/* Left: Logo + Title */}
+    <header className="bg-white shadow-sm sticky top-0 z-40">
+      <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center gap-4">
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          {/* Simple logo SVG */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-8 w-8 text-[#F44336]"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 2L2 7l10 5 10-5-10-5zm0 20V12l10-5v10l-10 5zM2 7v10l10 5V12L2 7z" />
-          </svg>
-          <h1 className="text-2xl font-bold text-[#E91E63] tracking-wide">
-            ShoppyGlobe
-          </h1>
+          <div className="bg-yellow-400 rounded-sm px-2 py-1 font-bold text-lg">Shoppy</div>
+          <div className="text-xl font-semibold">Globe</div>
         </Link>
 
-        {/* Center: Navigation Links */}
-        <nav className="hidden md:flex space-x-6 text-lg font-medium">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `hover:text-[#E91E63] transition ${
-                isActive ? "text-[#E91E63]" : "text-[#F44336]"
-              }`
-            }
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/shop"
-            className={({ isActive }) =>
-              `hover:text-[#E91E63] transition ${
-                isActive ? "text-[#E91E63]" : "text-[#F44336]"
-              }`
-            }
-          >
-            Shop Now
-          </NavLink>
-          <NavLink
-            to="/checkout"
-            className={({ isActive }) =>
-              `hover:text-[#E91E63] transition ${
-                isActive ? "text-[#E91E63]" : "text-[#F44336]"
-              }`
-            }
-          >
-            Checkout
-          </NavLink>
-          <NavLink
-            to="/cart"
-            className={({ isActive }) =>
-              `hover:text-[#E91E63] transition ${
-                isActive ? "text-[#E91E63]" : "text-[#F44336]"
-              }`
-            }
-          >
-            Cart
-          </NavLink>
-        </nav>
-
-        {/* Right: Search + Cart */}
-        <div className="flex items-center gap-4">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="hidden md:block px-3 py-1 rounded-full text-sm focus:outline-none border border-[#FF9800] placeholder:text-[#FF5722] text-[#F44336]"
-          />
-          <Link to="/cart" className="relative">
-            {/* Cart Icon */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7 text-[#F44336]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+        {/* Search bar (Amazon-like centered) */}
+        <div className="flex-1">
+          <div className="flex items-center">
+            <input
+              value={local}
+              onChange={onSearchChange}
+              placeholder="Search products, categories, brands..."
+              className="w-full rounded-l-md px-4 py-2 border border-gray-300 focus:outline-none"
+            />
+            <button
+              onClick={() => navigate("/")}
+              className="bg-yellow-500 px-4 rounded-r-md font-medium hover:bg-yellow-600"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.293 2.293A1 1 0 007.118 17h9.764a1 1 0 00.911-1.707L17 13M10 21h4"
-              />
+              Search
+            </button>
+          </div>
+        </div>
+
+        {/* Cart / totals */}
+        <div className="flex items-center gap-4">
+          <Link to="/cart" className="relative flex items-center gap-2">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M3 3h2l.4 2M7 13h10l4-8H5.4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            {/* Cart Count */}
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#E91E63] text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                {cartCount}
-              </span>
-            )}
+            <div className="text-sm">
+              <div className="font-medium">{cartCount} items</div>
+              <div className="text-xs text-gray-500">₹{subtotal.toFixed(2)}</div>
+            </div>
           </Link>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div className="md:hidden flex justify-center pb-2">
-        <nav className="flex space-x-4 text-sm">
-          <Link to="/" className="text-[#F44336] hover:text-[#E91E63]">
-            Home
-          </Link>
-          <Link to="/shop" className="text-[#F44336] hover:text-[#E91E63]">
-            Shop Now
-          </Link>
-          <Link to="/checkout" className="text-[#F44336] hover:text-[#E91E63]">
-            Checkout
-          </Link>
-          <Link to="/cart" className="text-[#F44336] hover:text-[#E91E63]">
-            Cart
-          </Link>
-        </nav>
+      {/* category bar (simple) */}
+      <div className="bg-gray-50 border-t">
+        <div className="max-w-[1200px] mx-auto px-4 py-2 flex gap-4 text-sm overflow-x-auto">
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">All</span>
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">Electronics</span>
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">Clothing</span>
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">Home</span>
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">Books</span>
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">Beauty</span>
+          <span className="px-2 py-1 rounded hover:bg-gray-200 cursor-pointer">Sports</span>
+        </div>
       </div>
     </header>
   );
 }
-
-export default Header;

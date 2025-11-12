@@ -1,62 +1,30 @@
-// src/routes/router.jsx
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Loader from "../components/Loader";
 
-const Home = lazy(() => import("../pages/Home"));
-const ProductPage = lazy(() => import("../pages/ProductPage"));
-const CartPage = lazy(() => import("../pages/CartPage"));
-const CheckoutPage = lazy(() => import("../pages/CheckoutPage"));
-const NotFound = lazy(() => import("../components/NotFound"));
+// lazy page imports
+const Home = React.lazy(() => import("../pages/Home"));
+const ProductPage = React.lazy(() => import("../pages/ProductPage"));
+const CartPage = React.lazy(() => import("../pages/CartPage"));
+const CheckoutPage = React.lazy(() => import("../pages/CheckoutPage"));
+const NotFound = React.lazy(() => import("../components/NotFound"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // layout wrapper
+    element: <App />,
     children: [
-      {
-        index: true,
-        element: (
-          <Suspense fallback={<Loader />}>
-            <Home />
-          </Suspense>
-        ),
-      },
-      {
-        path: "product/:id",
-        element: (
-          <Suspense fallback={<Loader />}>
-            <ProductPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "cart",
-        element: (
-          <Suspense fallback={<Loader />}>
-            <CartPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "checkout",
-        element: (
-          <Suspense fallback={<Loader />}>
-            <CheckoutPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "*",
-        element: (
-          <Suspense fallback={<Loader />}>
-            <NotFound />
-          </Suspense>
-        ),
-      },
-    ],
+      { index: true, element: <Home /> },
+      { path: "product/:productId", element: <ProductPage /> },
+      { path: "cart", element: <CartPage /> },
+      { path: "checkout", element: <CheckoutPage /> }
+    ]
   },
+  {
+    path: "*",
+    element: <NotFound />
+  }
 ]);
 
 export default router;

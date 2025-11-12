@@ -1,33 +1,39 @@
-// src/hooks/useProducts.js
-import { useState, useEffect } from "react";
-import { getAllProducts } from "../api/Products";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { getAllProducts } from "../api/products";
 
-const useProducts = () => {
-  const [data, setData] = useState([]);
+/**
+ * useProducts: custom hook to fetch products and handle loading/error/refetch.
+ * Implements AbortController for cleanup.
+ */
+export default function useProducts() {
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const controllerRef = useRef(null);
 
-  // Fetch function (can be reused by refetch)
-  const fetchProducts = async () => {
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    controllerRef.current?.abort();
+    const controller = new AbortController();
+    controllerRef.current = controller;
     try {
-      setLoading(true);
-      const products = await getAllProducts();
-      setData(products);
-      setError(null);
+      const json = await getAllProducts({ signal: controller.signal });
+      setData(json);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      if (err.name === "AbortError") return; // aborted
+      setError(err.message || "Unknown error");
     } finally {
       setLoading(false);
     }
-  };
-
-  // Run on mount
-  useEffect(() => {
-    fetchProducts();
   }, []);
 
-  // Return everything needed by components
-  return { data, loading, error, refetch: fetchProducts };
-};
+  useEffect(() => {
+    fetchData();
+    return () => {
+      controllerRef.current?.abort();
+    };
+  }, [fetchData]);
 
-export default useProducts;
+  return { data, loading, error, refetch: fetchData };
+}

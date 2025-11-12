@@ -1,25 +1,22 @@
-// src/api/products.js
+/**
+ * Small wrapper over fetch to centralize product API calls.
+ * Throws Error with friendly message on non-OK response.
+ */
 
-// Function to fetch all products
-export const getAllProducts = async () => {
-  try {
-    const response = await fetch("https://dummyjson.com/products");
-    if (!response.ok) throw new Error("Failed to fetch products");
-    const data = await response.json();
-    return data.products; // API returns { products: [...] }
-  } catch (error) {
-    throw error;
-  }
-};
+const BASE = "https://dummyjson.com";
 
-// Function to fetch a single product by ID
-export const getProductById = async (id) => {
-  try {
-    const response = await fetch(`https://dummyjson.com/products/${id}`);
-    if (!response.ok) throw new Error("Failed to fetch product details");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw error;
+export async function getAllProducts() {
+  const resp = await fetch(`${BASE}/products`);
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch products: ${resp.status} ${resp.statusText}`);
   }
-};
+  return resp.json(); // returns { products: [...], total, limit, skip }
+}
+
+export async function getProductById(id) {
+  const resp = await fetch(`${BASE}/products/${id}`);
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch product ${id}: ${resp.status} ${resp.statusText}`);
+  }
+  return resp.json(); // returns product object
+}

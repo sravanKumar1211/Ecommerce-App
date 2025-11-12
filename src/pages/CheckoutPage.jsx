@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
+import Checkout from "../components/Checkout/Checkout";
 
-function CheckoutPage() {
+export default function CheckoutPage() {
   return (
-    <>
-    <h1>Checkout</h1>
-    </>
-  )
+    <div>
+      <h2 className="text-2xl font-semibold mb-4">Checkout</h2>
+      <Checkout />
+    </div>
+  );
 }
-
-export default CheckoutPage

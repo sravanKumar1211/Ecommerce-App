@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
+import Cart from "../components/Cart/Cart";
 
-function CartPage() {
+export default function CartPage() {
   return (
-    <h1>Cart</h1>
-  )
+    <div>
+      <h2 className="text-2xl font-semibold mb-4">Shopping Cart</h2>
+      <Cart />
+    </div>
+  );
 }
-
-export default CartPage

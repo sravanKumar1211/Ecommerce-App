@@ -1,28 +1,13 @@
-// src/components/NotFound.jsx
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
-function NotFound() {
+export default function NotFound() {
+  const location = useLocation();
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-center bg-gradient-to-br from-[#FFEB3B] via-[#FF9800] to-[#FF5722] text-white px-6">
-      {/* 404 Heading */}
-      <h1 className="text-9xl font-extrabold text-white drop-shadow-lg">404</h1>
-      <h2 className="text-3xl font-semibold mt-4 text-[#E91E63]">
-        Oops! Page Not Found
-      </h2>
-      <p className="mt-2 text-lg text-[#F44336]">
-        The page you’re looking for doesn’t exist or has been moved.
-      </p>
-
-      {/* Button */}
-      <Link
-        to="/"
-        className="mt-6 px-6 py-2 bg-white text-[#FF5722] font-semibold rounded-full shadow hover:bg-[#FFE082] hover:text-[#E91E63] transition-all duration-300"
-      >
-        Back to Home
-      </Link>
+    <div className="text-center py-16">
+      <h1 className="text-4xl font-bold mb-4">404 — Page Not Found</h1>
+      <p className="mb-6">No match for <span className="font-mono">{location.pathname}</span></p>
+      <Link to="/" className="bg-blue-600 text-white px-4 py-2 rounded">Back to Home</Link>
     </div>
   );
 }
-
-export default NotFound;
