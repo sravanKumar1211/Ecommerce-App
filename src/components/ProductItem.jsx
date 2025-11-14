@@ -5,31 +5,47 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { TiStar } from "react-icons/ti";
 
 export default function ProductItem({ item }) {
-  const dispatch = useDispatch();
+  // ========================== Redux Setup ==========================
+  const dispatch = useDispatch(); // to trigger cart actions (increase/decrease items)
+
+  // ========================== Price Calculation ==========================
+  // Apply discount percentage to calculate discounted price
   const discountPrice = item.price * (1 - item.discountPercentage / 100);
+
+  // ========================== Get Product Quantity from Redux ==========================
+  // Finds the product quantity in the global cart (if exists), else returns 0
   const quantity = useSelector(
     (state) =>
       state.cart.items.find((p) => p.id === item.id)?.quantity || 0
   );
 
+  // ========================== Cart Action Handlers ==========================
+  // Add item to cart
   function handleAddToCart(item) {
     dispatch(increaseItems(item));
   }
 
+  // Decrease item quantity in cart
   function handleDec() {
     dispatch(decreaseItem(item));
   }
 
+  // Increase item quantity in cart
   function handleInc() {
     dispatch(increaseItems(item));
   }
 
+  // ========================== JSX Structure ==========================
   return (
     <div
       className="w-[230px] bg-white border border-gray-200 rounded-md shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
       key={item.id}
     >
-      {/* Product Image */}
+      {/* ========================== Product Image ==========================
+          - Lazy loaded image for better performance
+          - Discount badge shown if discount > 0
+          - Clicking image navigates to product detail page
+      */}
       <Link to={`/productdetail/${item.id}`}>
         <div className="relative overflow-hidden rounded-t-md">
           <LazyLoadImage
@@ -44,13 +60,17 @@ export default function ProductItem({ item }) {
           )}
         </div>
 
-        {/* Product Info */}
+        {/* ========================== Product Info Section ==========================
+            - Displays product title, rating, and pricing
+            - Clickable area leads to product detail page
+        */}
         <div className="p-3 text-left">
+          {/* Product Title */}
           <h2 className="font-medium text-gray-900 text-sm line-clamp-2 hover:text-[#007185] transition-colors">
             {item.title}
           </h2>
 
-          {/* Rating */}
+          {/* Product Rating */}
           <div className="flex items-center mt-1">
             <TiStar
               className={`text-base mr-1 ${
@@ -74,7 +94,7 @@ export default function ProductItem({ item }) {
             </p>
           </div>
 
-          {/* Price */}
+          {/* Product Price Section */}
           <div className="mt-2 flex items-center gap-2">
             <span className="line-through text-gray-400 text-xs">
               ₹{item.price}
@@ -86,9 +106,13 @@ export default function ProductItem({ item }) {
         </div>
       </Link>
 
-      {/* Add to Cart or Quantity Controls */}
+      {/* ========================== Add to Cart / Quantity Controls ==========================
+          - If product not added → Show "Add to Cart" button
+          - If already in cart → Show quantity increment/decrement buttons
+      */}
       <div className="px-3 pb-3 text-center">
         {quantity === 0 ? (
+          // Add to Cart button (initial state)
           <button
             onClick={() => handleAddToCart(item)}
             className="w-full bg-[#FFD814] hover:bg-[#F7CA00] text-gray-900 font-medium text-sm py-1.5 rounded-md shadow-sm transition"
@@ -96,16 +120,22 @@ export default function ProductItem({ item }) {
             Add to Cart
           </button>
         ) : (
+          // Quantity update controls
           <div className="flex items-center justify-center gap-3">
+            {/* Decrease Quantity */}
             <button
               onClick={handleDec}
               className="px-2 py-1 bg-gray-200 hover:bg-gray-300 border border-gray-300 text-gray-800 rounded-md text-sm font-semibold transition"
             >
               −
             </button>
+
+            {/* Current Quantity */}
             <span className="px-3 py-1 border border-gray-300 rounded-md text-gray-800 text-sm font-medium">
               {quantity}
             </span>
+
+            {/* Increase Quantity */}
             <button
               onClick={handleInc}
               className="px-2 py-1 bg-gray-200 hover:bg-gray-300 border border-gray-300 text-gray-800 rounded-md text-sm font-semibold transition"

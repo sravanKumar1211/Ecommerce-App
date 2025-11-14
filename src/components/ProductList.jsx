@@ -4,25 +4,44 @@ import { lazy, memo, useState, Suspense } from "react";
 import { useSelector } from "react-redux";
 import { IoSearchOutline } from "react-icons/io5";
 
+// ========================== Lazy Loading Components ==========================
+// Lazy load components to optimize performance and initial page load
 const Search = lazy(() => import("./Search"));
 const Err = lazy(() => import("./Err"));
 const ProductItem = lazy(() => import("./ProductItem"));
+
+// Memoized version of ProductItem to prevent unnecessary re-renders
 const MemoizedProductItem = memo(ProductItem);
 
 export default function ProductList() {
+  // ========================== React Router Hook ==========================
+  // Extracts the category from the current URL (e.g., /category/furniture)
   const { category } = useParams();
-  const [searchText, setSearchText] = useState("");
+
+  // ========================== Local States ==========================
+  const [searchText, setSearchText] = useState(""); // For managing live search input
+
+  // ========================== Redux Data ==========================
+  // Fetch products from Redux store to avoid redundant API calls
   const { products } = useSelector((state) => state.product);
+
+  // ========================== API Fetch ==========================
+  // Fetches product data directly (acts as a fallback or fresh load)
   const { data, loading, error } = useFetchData("https://dummyjson.com/products");
 
+  // ========================== Handlers ==========================
+  // Triggered when user types in the search box
   function handleSearch(e) {
     setSearchText(e.target.value);
   }
 
+  // Optional button click handler (currently only validates input)
   function handleclick() {
     if (!searchText.trim()) return;
   }
 
+  // ========================== Loading State ==========================
+  // Display loading message while data is being fetched
   if (loading)
     return (
       <div className="flex justify-center items-center h-[60vh] text-gray-700 text-lg">
@@ -30,22 +49,31 @@ export default function ProductList() {
       </div>
     );
 
-  {error && (
-    <Suspense fallback={<div>Loading Error...</div>}>
-      <Err />
-    </Suspense>
-  )}
+  // ========================== Error Handling ==========================
+  // Display error component if fetch fails
+  {
+    error && (
+      <Suspense fallback={<div>Loading Error...</div>}>
+        <Err />
+      </Suspense>
+    );
+  }
 
+  // ========================== Product Filtering ==========================
+  // If a category is selected from URL, show only those products
+  // Otherwise show all products
   const productsToShow = category
     ? products.filter(
         (item) => item.category.toLowerCase() === category.toLowerCase()
       )
     : products;
 
+  // ========================== Empty Product Handling ==========================
+  // If no products are found in a selected category
   if (!productsToShow?.length)
     return (
       <div className="min-h-screen bg-[#EAEDED] text-center px-6 py-10">
-        {/* Search Bar */}
+        {/* ========================== Search Bar ========================== */}
         <div className="flex justify-center items-center py-4 bg-[#232F3E] rounded-md shadow-md mb-6">
           <input
             type="text"
@@ -62,10 +90,13 @@ export default function ProductList() {
           </button>
         </div>
 
+        {/* Empty category message */}
         <h1 className="text-3xl font-semibold text-gray-900 mb-3 mt-3 capitalize">
           {category ? `${category}` : "All Products"}
         </h1>
         <p className="text-gray-600 italic">No products found in this category.</p>
+
+        {/* Back to Home Button */}
         <Link
           to="/"
           className="inline-block mt-6 px-6 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-gray-900 rounded-md font-medium transition"
@@ -75,9 +106,10 @@ export default function ProductList() {
       </div>
     );
 
+  // ========================== Main Render ==========================
   return (
     <div className="min-h-screen bg-[#EAEDED] px-6 py-10">
-      {/* Search Bar */}
+      {/* ========================== Search Bar ========================== */}
       <div className="flex justify-center items-center py-4 bg-[#232F3E] rounded-md shadow-md mb-8">
         <input
           type="text"
@@ -94,18 +126,26 @@ export default function ProductList() {
         </button>
       </div>
 
-      {/* Category Title */}
+      {/* ========================== Conditional Rendering ==========================
+          - If user types something in search bar → show Search component
+          - Else → show products based on category or all products
+      */}
       {searchText ? (
+        // Search Component (lazy loaded)
         <Suspense fallback={<div className="text-center text-gray-600">Searching...</div>}>
           <Search searchText={searchText} />
         </Suspense>
       ) : (
         <div className="text-center">
+          {/* ========================== Category Heading ========================== */}
           <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8 mt-2.5 capitalize border-b-2 border-gray-300 inline-block pb-2">
             {category ? `${category}` : "All Products"}
           </h1>
 
-          {/* Product Grid */}
+          {/* ========================== Product Grid ==========================
+              - Displays products using memoized ProductItem components
+              - Responsive grid layout across devices
+          */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
             {productsToShow.map((item) => (
               <MemoizedProductItem item={item} key={item.id} />
