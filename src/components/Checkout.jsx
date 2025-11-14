@@ -103,7 +103,7 @@ export default function Checkout() {
             {/* Billing Info Section */}
             <div className="w-full lg:w-2/3 bg-white border border-gray-200 shadow-sm rounded-md p-6">
               <h1 className="text-2xl font-semibold text-gray-900 mb-6 border-b border-gray-200 pb-3">
-                Enter your delivery address
+                Enter Your Details
               </h1>
 
               <form
@@ -149,7 +149,7 @@ export default function Checkout() {
                     htmlFor="cod"
                     className="mb-1 text-sm font-medium text-gray-700"
                   >
-                    Payment Method
+                    Mode of payment
                   </label>
                   <select
                     id="cod"

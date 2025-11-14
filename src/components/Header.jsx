@@ -19,7 +19,7 @@ export default function Header() {
           to="/"
           className="text-2xl sm:text-3xl font-semibold tracking-wide flex items-center gap-1"
         >
-          <span className="text-[#FFD814] hover:text-[#F7CA00] transition">Shoppy</span>
+          <span className="text-[#FFD814] hover:text-[#F7CA00] transition">Shoppy⤻</span>
           <span className="text-white">Globe</span>
         </Link>
 
@@ -38,7 +38,7 @@ export default function Header() {
             className="relative flex items-center gap-1 text-sm font-medium hover:text-[#FFD814] transition"
           >
             <FaShopify className="text-lg" />
-            <span>Shop</span>
+            <span>ShopNow</span>
           </Link>
 
           <Link

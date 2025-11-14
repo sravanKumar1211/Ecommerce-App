@@ -23,8 +23,8 @@ export default function Footer() {
         <div>
           <h3 className="text-white font-semibold mb-3">Connect with Us</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:underline hover:text-white">Facebook</a></li>
-            <li><a href="#" className="hover:underline hover:text-white">Twitter</a></li>
+            <li><a href="https://www.linkedin.com/in/sravan-kumar-gaddamedhi-89976019a/" className="hover:underline hover:text-white">Linkedin</a></li>
+            <li><a href="https://github.com/sravanKumar1211" className="hover:underline hover:text-white">Git-Hub</a></li>
             <li><a href="#" className="hover:underline hover:text-white">Instagram</a></li>
           </ul>
         </div>
@@ -59,7 +59,7 @@ export default function Footer() {
       <div className="bg-[#131A22] text-center py-4 text-sm">
         <p className="text-gray-400">&copy; 2025 <span className="text-white font-medium">Shoppy Globe</span>. All rights reserved.</p>
         <div className="mt-2 space-x-4">
-          <a href="#" className="text-gray-400 hover:text-white">Privacy Policy</a>
+          <a href="#" className="text-gray-400 hover:text-white">G SravanKumar</a>
           <a href="#" className="text-gray-400 hover:text-white">Terms of Service</a>
           <a href="#" className="text-gray-400 hover:text-white">Contact</a>
         </div>

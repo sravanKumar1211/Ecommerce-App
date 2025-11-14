@@ -123,7 +123,7 @@ export default function Home() {
           Welcome to <span className="text-[#FFD814]">Shoppy Globe</span>
         </h1>
         <p className="text-base text-gray-200 max-w-2xl mx-auto">
-          Discover top deals and highly-rated products, all in one place. Shop smarter, save bigger!
+          Shop More. Spend Less. Enjoy Better<br></br> Quality, Quantity, and Savings — All in One Place..!
         </p>
       </div>
 
@@ -200,7 +200,7 @@ export default function Home() {
           {/* Crazy Deals Section */}
           <section className="mb-12">
             <h2 className="text-center text-2xl font-semibold mb-6 text-gray-900">
-              🔥 Today's Top Deals (Up to 20% OFF)
+              🔥 Don’t Miss Out — Exclusive 20% OFF Today!
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
               {crazyDealsProducts.map((item) => (
@@ -237,7 +237,7 @@ export default function Home() {
           {/* Top Rated Section */}
           <section>
             <h2 className="text-center text-2xl font-semibold mb-6 text-gray-900">
-              ⭐ Top Rated Products
+              ⭐ Top Rated Products — Loved by Thousands!
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 justify-items-center">
               {topRatedProducts.map((item) => (

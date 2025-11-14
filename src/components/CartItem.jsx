@@ -57,7 +57,7 @@ export default function CartItem({ item }) {
 
         {/* Delivery Info */}
         <p className="text-xs text-green-600 mt-2 font-medium">
-          Eligible for FREE Delivery
+          Get FREE Delivery On Prime Membership
         </p>
 
         {/* Quantity + Remove */}
